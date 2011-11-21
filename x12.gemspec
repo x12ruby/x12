@@ -8,8 +8,8 @@ Gem::Specification.new do |s|
   s.authors     = ["Sean Walberg"]
   s.email       = ["sean@ertw.com"]
   s.homepage    = ""
-  s.summary     = %q{TODO: Write a gem summary}
-  s.description = %q{TODO: Write a gem description}
+  s.summary     = %q{A gem to handle parsing and generation of ANSI X12 documents}
+  s.description = %q{A gem to handle parsing and generation of ANSI X12 documents. Forked from the project at http://www.appdesign.com/x12parser/}
 
   s.rubyforge_project = "x12"
 
