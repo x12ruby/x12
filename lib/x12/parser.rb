@@ -111,9 +111,12 @@ module X12
     def process_loop(loop)
       loop.nodes.each{|i|
         case i
-          when X12::Loop: process_loop(i)
-          when X12::Segment: process_segment(i) unless i.nodes.size > 0
-          else return
+          when X12::Loop
+            process_loop(i)
+          when X12::Segment
+            process_segment(i) unless i.nodes.size > 0
+          else
+            return
         end
       }
     end

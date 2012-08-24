@@ -39,10 +39,14 @@ module X12
       definitions.each { |element|
         #puts element.name
         syntax_element = case element.name
-                         when /table/i     : parse_table(element)
-                         when /segment/i   : parse_segment(element)
-                         when /composite/i : parse_composite(element)
-                         when /loop/i      : parse_loop(element)
+                         when /table/i
+                           parse_table(element)
+                         when /segment/i
+                           parse_segment(element)
+                         when /composite/i
+                           parse_composite(element)
+                         when /loop/i
+                           parse_loop(element)
                          end
 
         self[syntax_element.class] ||= {}
@@ -54,10 +58,14 @@ module X12
 
     def parse_boolean(s)
       return case s
-             when nil : false
-             when "" : false
-             when /(^y(es)?$)|(^t(rue)?$)|(^1$)/i : true
-             when /(^no?$)|(^f(alse)?$)|(^0$)/i : false
+             when nil
+               false
+             when ""
+               false
+             when /(^y(es)?$)|(^t(rue)?$)|(^1$)/i
+               true
+             when /(^no?$)|(^f(alse)?$)|(^0$)/i
+               false
              else
                nil
              end # case
@@ -65,12 +73,18 @@ module X12
 
     def parse_type(s)
       return case s
-             when nil : 'string'
-             when /^C.+$/ : s
-             when /^i(nt(eger)?)?$/i : 'int'
-             when /^l(ong)?$/i : 'long'
-             when /^d(ouble)?$/i : 'double'
-             when /^s(tr(ing)?)?$/i : 'string'
+             when nil
+               'string'
+             when /^C.+$/
+               s
+             when /^i(nt(eger)?)?$/i
+               'int'
+             when /^l(ong)?$/i
+               'long'
+             when /^d(ouble)?$/i
+               'double'
+             when /^s(tr(ing)?)?$/i
+               'string'
              else
                nil
              end # case
@@ -78,9 +92,12 @@ module X12
 
     def parse_int(s)
       return case s
-             when nil : 0
-             when /^\d+$/ : s.to_i
-             when /^inf(inite)?$/ : 999999
+             when nil
+               0
+             when /^\d+$/
+               s.to_i
+             when /^inf(inite)?$/
+               999999
              else
                nil
              end # case
@@ -146,8 +163,10 @@ module X12
 
       components = e.elements.to_a.inject([]){|r, element|
         r << case element.name
-             when /loop/i    : parse_loop(element)
-             when /segment/i : parse_segment(element)
+             when /loop/i
+               parse_loop(element)
+             when /segment/i
+               parse_segment(element)
              else
                throw Exception.new("Cannot recognize syntax for: #{element.inspect} in loop #{e.inspect}")
              end # case
