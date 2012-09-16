@@ -50,19 +50,24 @@ module X12
                   'COM4',
                  ]
 
+    # Fixes up the file name so we don't worry about DOS files
+    def self.sanitized_file_name(name)
+      # Deal with Microsoft devices
+      base_name = File.basename(name, '.xml')
+      if MS_DEVICES.include? base_name
+        File.join(File.dirname(name), "#{base_name}_.xml")
+      else
+        name
+      end
+    end
+
+
     # Creates a parser out of a definition
     def initialize(file_name)
       save_definition = @x12_definition
 
-      # Deal with Microsoft devices
-      base_name = File.basename(file_name, '.xml')
-      if MS_DEVICES.find{|i| i == base_name}
-        file_name = File.join(File.dirname, "#{base_name}_.xml")
-      end
-      #puts "Reading definition from #{file_name}"
-
       # Read and parse the definition
-      str = File.open(file_name, 'r').read
+      str = File.open(X12::Parser.sanitized_file_name(file_name), 'r').read
       @dir_name = File.dirname(File.expand_path(file_name)) # to look up other files if needed
       @x12_definition = X12::XMLDefinitions.new(str)
 
