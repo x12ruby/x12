@@ -44,21 +44,19 @@ module X12
 
     # Parse a string and fill out internal structures with the pieces of it. Returns 
     # an unparsed portion of the string or the original string if nothing was parsed out.
-    def parse(str)
+    def parse(document)
       #puts "Parsing loop #{name}: "+str
-      s = str
-      nodes.each{|i|
-        m = i.parse(s)
-        s = m if m
-      } 
-      if str == s
-        return nil
-      else
-        self.parsed_str = str[0..-s.length-1]
-        s = do_repeats(s)
+      working = document
+
+      nodes.each do |node|
+        matched = node.parse(working)
+        working = matched if matched
       end
-      #puts 'Parsed loop '+self.inspect
-      return s
+
+      return nil if document == working
+
+      self.parsed_str = document[0..-working.length-1]
+      working = do_repeats(working)
     end # parse
 
     # Render all components of this loop as string suitable for EDI
