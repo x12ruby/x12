@@ -35,7 +35,6 @@ describe "a mixed template" do
       subject.FG2.ST.A.should == "997"
       subject.FG2[0].ST.B.should == "2"
       pending("Fixing loop processing") do
-        puts subject.show
         subject.FG2.GS.to_s.should == "GS*Number2~"
 
         subject.FG2.to_s.should == "GE*Number1~GS*Number2~ST*997*2~BAR*Doc2SE*2~GE*Number1~"
