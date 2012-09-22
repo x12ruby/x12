@@ -45,7 +45,7 @@ module X12
     # Parse a string and fill out internal structures with the pieces of it. Returns 
     # an unparsed portion of the string or the original string if nothing was parsed out.
     def parse(document)
-      #puts "Parsing loop #{name}: "+str
+      #puts "Parsing loop #{name}: " + document
       working = document
 
       nodes.each do |node|

@@ -5,7 +5,7 @@ describe "a 270 factory with interchange" do
   subject { X12::Parser.new('misc/270interchange.xml').factory('270interchange') }
 
   it "generates a 270 document" do
-    subject.ISA {|isa|
+    subject.ISA do |isa|
       isa.AuthorizationInformationQualifier = '03'
       isa.AuthorizationInformation = 'user      '
       isa.SecurityInformationQualifier = '01'
@@ -22,28 +22,28 @@ describe "a 270 factory with interchange" do
       isa.AcknowledgmentRuested = '0'
       isa.UsageIndicator = 'T'
       isa.ComponentElementSeparator = ':'
-    }
+    end
 
     fg_counter = 0
-    subject.FG.repeat {|fg|
+    subject.FG.repeat do |fg|
       create_fg(fg, fg_counter, 3)
       fg_counter += 1
-    }
+    end
 
-    subject.FG.repeat {|fg|
+    subject.FG.repeat do |fg|
       create_fg(fg, fg_counter, 2)
       fg_counter += 1
-    }
+    end
 
-    subject.FG.repeat {|fg|
+    subject.FG.repeat do |fg|
       create_fg(fg, fg_counter, 1)
       fg_counter += 1
-    }
+    end
 
-    subject.IEA {|iea|
+    subject.IEA do |iea|
       iea.NumberOfIncludedFunctionalGroups=fg_counter
       iea.InterchangeControlNumber = '230623206'
-    }
+    end
 
     subject.render.should == document
   end
@@ -140,106 +140,106 @@ IEA*3*230623206~
     message.ST.TransactionSetControlNumber  = transactionSetControlNumber
     count += 1
 
-    message.BHT {|bht|
+    message.BHT do |bht|
       bht.HierarchicalStructureCode='0022'
       bht.TransactionSetPurposeCode='13'
       bht.ReferenceIdentification='LNKJNFGRWDLR'
       bht.Date='20070724'
       bht.Time='1726'
-    }
+    end
     count += 1
 
-    message.L2000A {|l2000A|
-      l2000A.HL{|hl|
+    message.L2000A do |l2000A|
+      l2000A.HL do |hl|
         hl.HierarchicalIdNumber='1'
         hl.HierarchicalParentIdNumber=''
         hl.HierarchicalChildCode='1'
-      }
+      end
       count += 1
 
-      l2000A.L2100A {|l2100A|
-        l2100A.NM1 {|nm1|
+      l2000A.L2100A do |l2100A|
+        l2100A.NM1 do |nm1|
           nm1.EntityIdentifierCode1='PR'
           nm1.EntityTypeQualifier='2'
           nm1.NameLastOrOrganizationName='RED CROSS'
           nm1.IdentificationCodeQualifier='PI'
           nm1.IdentificationCode='CHICAGO BLUES'
-        }
+        end
         count += 1
-      }
-    }
+      end
+    end
 
-    message.L2000B {|l2000B|
-      l2000B.HL{|hl|
+    message.L2000B do |l2000B|
+      l2000B.HL do |hl|
         hl.HierarchicalIdNumber='2'
         hl.HierarchicalParentIdNumber='1'
         hl.HierarchicalChildCode='1'
-      }
+      end
       count += 1
 
-      l2000B.L2100B {|l2100B|
-        l2100B.NM1 {|nm1|
+      l2000B.L2100B do |l2100B|
+        l2100B.NM1 do |nm1|
           nm1.EntityIdentifierCode1='1P'
           nm1.EntityTypeQualifier='1'
           nm1.NameLastOrOrganizationName=''
           nm1.IdentificationCodeQualifier='SV'
           nm1.IdentificationCode='daw'
-        }
+        end
         count += 1
-      }
-    }
+      end
+    end
 
-    message.L2000C {|l2000C|
-      l2000C.HL{|hl|
+    message.L2000C do |l2000C|
+      l2000C.HL do |hl|
         hl.HierarchicalIdNumber='3'
         hl.HierarchicalParentIdNumber='2'
         hl.HierarchicalChildCode='0'
-      }
+      end
       count += 1
 
-      l2000C.L2100C {|l2100C|
-        l2100C.NM1 {|nm1|
+      l2000C.L2100C do |l2100C|
+        l2100C.NM1 do |nm1|
           nm1.EntityIdentifierCode1='IL'
           nm1.EntityTypeQualifier='1'
           nm1.NameLastOrOrganizationName='LastName'
           nm1.NameFirst='FirstName'
-        }
+        end
         count += 1
 
-        l2100C.DMG {|dmg|
+        l2100C.DMG do |dmg|
           dmg.DateTimePeriodFormatQualifier='D8'
           dmg.DateTimePeriod='19700725'
-        }
+        end
         count += 1
 
-        l2100C.DTP {|dtp|
+        l2100C.DTP do |dtp|
           dtp.DateTimeQualifier='307'
           dtp.DateTimePeriodFormatQualifier='D8'
           dtp.DateTimePeriod='20070724'
-        }
+        end
         count += 1
 
-        l2100C.L2110C {|l2110C|
-          l2110C.EQ {|eq|
+        l2100C.L2110C do |l2110C|
+          l2110C.EQ do |eq|
             eq.ServiceTypeCode='60'
-          }
+          end
           count += 1
-        }
-      }
-    }
+        end
+      end
+    end
 
     count += 1
-    message.SE {|se|
+    message.SE do |se|
       se.NumberOfIncludedSegments = count
       se.TransactionSetControlNumber = transactionSetControlNumber
-    }
+    end
 
   end # create_270
 
   def create_fg(message, fg_num, num_of_270)
     groupControlNumber = "00#{fg_num}"
 
-    message.GS {|gs|
+    message.GS do |gs|
       gs.FunctionalIdentifierCode='HS'
       gs.ApplicationSendersCode='0000000Eliginet'
       gs.ApplicationReceiversCode='CHICAGO BLUES'
@@ -248,16 +248,16 @@ IEA*3*230623206~
       gs.GroupControlNumber=groupControlNumber
       gs.ResponsibleAgencyCode='X'
       gs.VersionReleaseIndustryIdentifierCode='004010X092A1'
-    }
+    end
 
-    (1..num_of_270).each{|count|
+    (1..num_of_270).each do |count|
       create_270(message._270.repeat, fg_num, count-1)
-    }
+    end
 
-    message.GE {|ge|
+    message.GE do |ge|
       ge.NumberOfTransactionSetsIncluded=num_of_270
       ge.GroupControlNumber=groupControlNumber
-    }
+    end
   end # create_fg
   
   def test_all

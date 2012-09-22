@@ -32,17 +32,17 @@ describe "a 270 document with interchange" do
   end
 
   it "tests L2000C_NM1" do
-    subject.FG[1].with { |fg|
-      fg._270[1].with {|_270|
-        _270.L2000C {|l2000C|
-          l2000C.L2100C {|l2100C|
-            l2100C.NM1 {|nm1|
+    subject.FG[1].with do |fg|
+      fg._270[1].with do |_270|
+        _270.L2000C do |l2000C|
+          l2000C.L2100C do |l2100C|
+            l2100C.NM1 do |nm1|
               nm1.NameFirst.should == 'FirstName'
-            }
-          }
-        }
-      }
-    }
+            end
+          end
+        end
+      end
+    end
   end
 
   it "tests L2000A_HL" do
