@@ -79,17 +79,14 @@ module X12
     # Try to parse the current element one more time if required. Returns the rest of the string
     # or the same string if no more repeats are found or required.
     def do_repeats(document)
-      #puts "In do_repeats #{caller[0]}"
       if self.repeats.end > 1
         possible_repeat = self.dup
         p_s = possible_repeat.parse(document)
-        #puts "p_s => #{p_s}"
         if p_s
           document = p_s
           self.next_repeat = possible_repeat
         end # if parsed
       end # more repeats
-      #puts "Leaving do_repeats #{caller[0]}"
       document
     end # do_repeats
 

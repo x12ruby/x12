@@ -50,7 +50,7 @@ describe X12::Loop do
       end
     end
 
-    context "on a basic loop that involves repeats" do
+    context "on a basic loop" do
       context "with no constraints" do
         subject { X12::Loop.new("LOOP", [gs_segment, aa_segment], 1..999) }
 
@@ -69,20 +69,25 @@ describe X12::Loop do
           end
         end
 
+        context "where the loop matches the first segment but not the second" do
+          let(:document) { "GS*first~BB*notamatch~" }
+
+          it "returns the whole string" do
+            subject.parse(document).should == document
+          end
+
+        end
+
         context "and a document that has a second loop that starts similar to the first" do
           before { @result = subject.parse("GS*first~AA*one~GS*second~BB*two~") }
 
           it "parses a correct string" do
-            pending("Fixing loop processing") do
-              @result.should == "GS*second~BB*two~"
-            end
+            @result.should == "GS*second~BB*two~"
           end
 
           it "has one loop" do
-            pending("Fixing loop processing") do
-              subject.to_a.size.should == 1
-            end
-            subject[0].to_s.should == "GS*first~AA*one"
+            subject.to_a.size.should == 1
+            subject[0].to_s.should == "GS*first~AA*one~"
           end
         end
       end
@@ -111,9 +116,7 @@ describe X12::Loop do
         end
 
         it "has one loop A" do
-          pending("Fixing loop processing") do
-            subject.LOOPA.size.should == 1
-          end
+          subject.LOOPA.size.should == 1
         end
 
         it "has one loop B" do
@@ -125,9 +128,7 @@ describe X12::Loop do
         end
 
         it "completely parses LOOPB" do
-          pending("Fixing loop processing") do
-            subject.LOOPB.to_s.should == "GS*second~BB*bb~"
-          end
+          subject.LOOPB.to_s.should == "GS*second~BB*bb~"
         end
       end
 
