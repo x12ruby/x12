@@ -58,7 +58,7 @@ module X12
     def show(ind = '')
       count = 0
       self.to_a.each{|i|
-        #puts "#{ind}#{i.name} #{i.object_id} #{i.super.object_id} [#{count}]: #{i.parsed_str} #{i.super.class}"
+        puts "#{ind}#{i.name} #{i.object_id} #{i.super.object_id} [#{count}]: #{i.parsed_str} #{i.super.class}"
         puts "#{ind}#{i.name} [#{count}]: #{i.to_s.sub(/^(.{30})(.*?)(.{30})$/, '\1...\3')}"
         # Force parsing a segment
         if i.kind_of?(X12::Segment) && i.nodes[0]
@@ -78,16 +78,16 @@ module X12
 
     # Try to parse the current element one more time if required. Returns the rest of the string
     # or the same string if no more repeats are found or required.
-    def do_repeats(s)
+    def do_repeats(document)
       if self.repeats.end > 1
         possible_repeat = self.dup
-        p_s = possible_repeat.parse(s)
+        p_s = possible_repeat.parse(document)
         if p_s
-          s = p_s
+          document = p_s
           self.next_repeat = possible_repeat
         end # if parsed
       end # more repeats
-      s
+      document
     end # do_repeats
 
     # Empty out the current element

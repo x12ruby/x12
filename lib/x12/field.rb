@@ -80,6 +80,7 @@ module X12
     end # simple_regexp
 
     # Returns proper validating string regexp for this field, takes field separator and segment separator as arguments
+    # This... never gets called
     def proper_regexp(field_sep, segment_sep)
       case self.type
       when 'I'
