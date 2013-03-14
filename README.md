@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/swalberg/x12.png)](https://travis-ci.org/swalberg/x12)
 # ANSI X12 parser in Ruby
 
 This is a fork of the project from http://www.appdesign.com/x12parser/, with the following changes:
