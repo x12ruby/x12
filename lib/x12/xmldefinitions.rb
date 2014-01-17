@@ -37,7 +37,6 @@ module X12
       doc = REXML::Document.new(str)
       definitions = doc.root.name =~ /^Definition$/i ? doc.root.elements.to_a : [doc.root]
       definitions.each { |element|
-        #puts element.name
         syntax_element = case element.name
                          when /table/i
                            parse_table(element)
