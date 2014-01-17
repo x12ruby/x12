@@ -22,8 +22,6 @@
 #++
 #
 
-require "rexml/document"
-
 module X12
 
   # $Id: XMLDefinitions.rb 90 2009-05-13 19:51:27Z ikk $
@@ -34,7 +32,7 @@ module X12
 
     # Parse definitions out of XML file
     def initialize(str)
-      doc = REXML::Document.new(str)
+      doc = Nokogiri.XML(str)
       definitions = doc.root.name =~ /^Definition$/i ? doc.root.elements.to_a : [doc.root]
       definitions.each { |element|
         syntax_element = case element.name
@@ -103,13 +101,21 @@ module X12
     end #parse_int
 
     def parse_attributes(e)
-      throw Exception.new("No name attribute found for : #{e.inspect}")          unless name = e.attributes["name"] 
-      throw Exception.new("Cannot parse attribute 'min' for: #{e.inspect}")      unless min = parse_int(e.attributes["min"])
-      throw Exception.new("Cannot parse attribute 'max' for: #{e.inspect}")      unless max = parse_int(e.attributes["max"])
-      throw Exception.new("Cannot parse attribute 'type' for: #{e.inspect}")     unless type = parse_type(e.attributes["type"])
-      throw Exception.new("Cannot parse attribute 'required' for: #{e.inspect}") if (required = parse_boolean(e.attributes["required"])).nil?
-      
-      validation = e.attributes["validation"]
+      throw Exception.new("No name attribute found for : #{e.inspect}")          unless name = e.attributes["name"].content
+      min = parse_int(e.attributes.has_key?("min") ? e.attributes["min"].content : nil )
+      throw Exception.new("Cannot parse attribute 'min' for: #{e.inspect}") unless min
+
+      max = parse_int(e.attributes.has_key?("max") ? e.attributes["max"].content : nil )
+      throw Exception.new("Cannot parse attribute 'max' for: #{e.inspect}") unless max
+
+      type = parse_type(e.attributes.has_key?("type") ? e.attributes["type"].content : nil )
+      throw Exception.new("Cannot parse attribute 'type' for: #{e.inspect}") unless type
+
+      required = parse_boolean(e.attributes.has_key?("required") ? e.attributes["required"].content : nil )
+      throw Exception.new("Cannot parse attribute 'required' for: #{e.inspect}") if required.nil?
+
+      validation = parse_boolean(e.attributes.has_key?("validation") ? e.attributes["validation"].content : nil )
+
       min = 1 if required and min < 1
       max = 999999 if max == 0
 
@@ -123,7 +129,7 @@ module X12
       # double quotes
       const_field =  e.attributes["const"]
       if(const_field)
-        type = "\"#{const_field}\""
+        type = "\"#{const_field.content}\""
       end
 
       Field.new(name, type, required, min, max, validation)
@@ -132,8 +138,8 @@ module X12
     def parse_table(e)
       name, min, max, type, required, validation = parse_attributes(e)
 
-      content = e.get_elements("Entry").inject({}) {|t, entry|
-        t[entry.attributes["name"]] = entry.attributes["value"]
+      content = e.search("Entry").inject({}) {|t, entry|
+        t[entry.attributes["name"].content] = entry.attributes["value"].content
         t
       }
       Table.new(name, content)
@@ -142,7 +148,7 @@ module X12
     def parse_segment(e)
       name, min, max, type, required, validation = parse_attributes(e)
 
-      fields = e.get_elements("Field").inject([]) {|f, field|
+      fields = e.search("Field").inject([]) {|f, field|
         f << parse_field(field)
       }
       Segment.new(name, fields, Range.new(min, max))
@@ -151,7 +157,7 @@ module X12
     def parse_composite(e)
       name, min, max, type, required, validation = parse_attributes(e)
 
-      fields = e.get_elements("Field").inject([]) {|f, field|
+      fields = e.search("Field").inject([]) {|f, field|
         f << parse_field(field)
       }
       Composite.new(name, fields)
