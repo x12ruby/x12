@@ -22,10 +22,6 @@
 #++
 #
 
-require "rexml/document"
-
-require 'pp'
-
 module X12
 
   # $Id: Parser.rb 89 2009-05-13 19:36:20Z ikk $
@@ -73,7 +69,6 @@ module X12
 
       # Populate fields in all segments found in all the loops
       @x12_definition[X12::Loop].each_pair{|k, v|
-        #puts "Populating definitions for loop #{k}"
         process_loop(v)
       } if @x12_definition[X12::Loop]
 
@@ -88,13 +83,11 @@ module X12
         }
       end
 
-      #puts PP.pp(self, '')
     end # initialize
 
     # Parse a loop of a given name out of a string. Throws an exception if the loop name is not defined.
     def parse(loop_name, str)
       loop = @x12_definition[X12::Loop][loop_name]
-      #puts "Loops to parse #{@x12_definition[X12::Loop].keys}"
       throw Exception.new("Cannot find a definition for loop #{loop_name}") unless loop
       loop = loop.dup
       loop.parse(str)
@@ -128,7 +121,6 @@ module X12
 
     # Instantiate segment's fields as previously defined
     def process_segment(segment)
-      #puts "Trying to process segment #{segment.inspect}"
       unless @x12_definition[X12::Segment] && @x12_definition[X12::Segment][segment.name]
         # Try to find it in a separate file if missing from the @x12_definition structure
         initialize(File.join(@dir_name, segment.name+'.xml'))
