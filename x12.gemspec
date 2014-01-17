@@ -24,5 +24,5 @@ Gem::Specification.new do |s|
   s.add_development_dependency('rspec')
   s.add_development_dependency('awesome_print')
   s.add_development_dependency('rake')
-  s.add_development_dependency('byebug')
+  s.add_development_dependency('byebug') if RUBY_VERSION =~ /^2/
 end
