@@ -5,10 +5,19 @@ This is a fork of the project from http://www.appdesign.com/x12parser/, with the
 
 * All the gem info has been changed to use bundler
 * Everything has been renamed to be lower case and work on case sensitive systems
-* Stopped including REXML, which was causing problems with Rails 3 and mailer
 * Fixed some bugs that were limiting the types of documents that could be parsed
+* Switched from REXML to Nokogiri which makes it a gazillion times faster
 
 Changes welcome, especially new document types or better tests.
+
+## Using it
+Please note! I don't control the `x12` gem but am working on it. Until then, add
+
+```Ruby
+gem "x12", git:  'https://github.com/x12ruby/x12.git'
+```
+
+to your Gemfile and run `bundle install`.
 
 ## Generating a document
 
